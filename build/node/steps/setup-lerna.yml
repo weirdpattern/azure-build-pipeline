@@ -1,0 +1,7 @@
+steps:
+  - script: yarn config set workspaces-experimental true
+    displayName: 'Set up yarn'
+  - script: yarn install --frozen-lockfile
+    displayName: 'Install dependencies'
+  - script: yarn bootstrap
+    displayName: 'Initialize packages'
