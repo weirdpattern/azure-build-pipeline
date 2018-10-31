@@ -4,6 +4,7 @@ parameters:
   matrix:
     node_10_x:
       node_version: 10.x
+  steps: []
 
 jobs:
   - job: ${{ parameters.name }}
@@ -19,3 +20,4 @@ jobs:
       inputs:
         versionSpec: $(node_version)
       displayName: 'Install Node'
+    - ${{ parameters.steps }}
