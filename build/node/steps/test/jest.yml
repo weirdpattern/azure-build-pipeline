@@ -1,0 +1,11 @@
+paramters:
+  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  needs_install: false
+  extra_arguments: ''
+
+steps:
+  - script: ${{ parameters.build_tool }} install jest
+    condition: eq(${{ parameters.needs_install }}, true)
+    displayName: '[[Test]] - Installing jest'
+  - script: jest ${{ parameters.extra_arguments }}
+    displayName: '[[Test]] - Running tests with jest'

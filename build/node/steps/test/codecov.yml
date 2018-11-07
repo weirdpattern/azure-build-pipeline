@@ -1,0 +1,10 @@
+parameters:
+  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  needs_install: false
+
+steps:
+  - script: ${{ parameters.build_tool }} install codecov
+    condition: eq(${{ parameters.needs_install }}, true)
+    displayName: '[[Test]] - Installing codecov'
+  - script: codecov
+    displayName: '[[Test]] - Getting coverage report with codecov'

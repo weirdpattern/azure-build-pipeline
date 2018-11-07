@@ -1,0 +1,8 @@
+parameters:
+  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  script_name: ''
+  extra_arguments: ''
+
+steps:
+  - script: ${{ parameters.build_tool }} run ${{ script_name }} ${{ extra_arguments }}
+    displayName: 'Execute ${{ script_name }} in package.json'

@@ -1,0 +1,10 @@
+parameters:
+  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  use_yarn_workspaces: true
+
+steps:
+  - script: yarn config set workspaces-experimental true
+    condition: and(eq(${{ parameters.build_tool }}, 'yarn'), eq(${{ parameters.use_yarn_workspaces }}, true))
+    displayName: '[[Setup]] - Setting up yarn workspaces'
+  - script: lerna bootstrap
+    displayName: '[[Setup]] - Bootstrapping packages with lerna'

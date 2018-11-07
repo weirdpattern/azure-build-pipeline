@@ -1,0 +1,11 @@
+paramters:
+  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  needs_install: false
+  extra_arguments: ''
+
+steps:
+  - script: ${{ parameters.build_tool }} install jest
+    condition: eq(${{ parameters.needs_install }}, true)
+    displayName: '[[Test]] - Installing jest'
+  - script: jest --coverage --runInBand --no-cache ${{ parameters.extra_arguments }}
+    displayName: '[[Test]] - Getting coverage report with jest'

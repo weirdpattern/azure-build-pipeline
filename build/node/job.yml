@@ -19,5 +19,5 @@ jobs:
     - task: NodeTool@0
       inputs:
         versionSpec: $(node_version)
-      displayName: 'Install Node'
+      displayName: 'Installation: node v$(node_version)'
     - ${{ parameters.steps }}
