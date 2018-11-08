@@ -4,7 +4,7 @@ parameters:
 
 steps:
   - script: yarn config set workspaces-experimental true
-    condition: and(eq($(build_tool), 'yarn'), ${{ parameters.use_yarn_workspaces }})
+    condition: ${{ and( eq(build_tool, 'yarn'), parameters.use_yarn_workspaces ) }}
     displayName: '[ Setup ] - Setting up yarn workspaces'
   - script: lerna bootstrap ${{ parameters.extra_arguments }}
     displayName: '[ Setup ] - Bootstrapping packages with lerna'
