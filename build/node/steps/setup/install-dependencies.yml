@@ -1,7 +1,6 @@
 parameters:
-  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
   extra_arguments: ''
 
 steps:
-  - script: ${{ parameters.build_tool }} install ${{ parameters.extra_arguments }}
-    displayName: '[[Setup]] - Getting dependencies from registry'
+  - script: $(build_tool) install ${{ parameters.extra_arguments }}
+    displayName: '[ Setup ] - Getting dependencies from registry'

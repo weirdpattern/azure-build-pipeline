@@ -1,11 +1,8 @@
 parameters:
   build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
-  needs_install: false
-  extra_arguments: '. --ext .js,.jsx,.ts,.tsx'
+  extra_arguments: '--ext .js,.jsx,.ts,.tsx'
+  glob: '.'
 
 steps:
-  - script: ${{ parameters.build_tool }} install eslint
-    condition: eq(${{ parameters.needs_install }}, true)
-    displayName: '[[Styling]] - Installing eslint'
-  - script: eslint ${{ parameters.extra_arguments }}
-    displayName: '[[Styling]] - Linting project with eslint'
+  - script: eslint ${{ glob }} ${{ parameters.extra_arguments }}
+    displayName: '[ Styling ] - Linting project with eslint'

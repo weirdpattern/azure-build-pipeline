@@ -1,12 +1,8 @@
 parameters:
   build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
-  needs_install: false
-  glob: '*.{js,jsx,ts,tsx,html,json}'
   extra_arguments: ''
+  glob: '*.{js,jsx,ts,tsx,html,json}'
 
 steps:
-  - script: ${{ parameters.build_tool }} install prettier
-    condition: eq(${{ parameters.needs_install }}, true)
-    displayName: '[[Styling]] - Installing prettier'
   - script: prettier --write ${{ parameters.extra_arguments }} ${{ parameters.glob }}
     displayName: '[[Styling]] - Formatting project with prettier'

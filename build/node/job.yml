@@ -4,6 +4,7 @@ parameters:
   matrix:
     node_10_x:
       node_version: 10.x
+  build_tool: 'yarn'
   steps: []
 
 jobs:
@@ -15,9 +16,12 @@ jobs:
       matrix:
         ${{ parameters.matrix }}
 
+    variables:
+      build_tool: ${{ parameters.build_tool }}
+
     steps:
     - task: NodeTool@0
       inputs:
         versionSpec: $(node_version)
-      displayName: 'Installation: node v$(node_version)'
+      displayName: '[ Installation ] node v$(node_version)'
     - ${{ parameters.steps }}
