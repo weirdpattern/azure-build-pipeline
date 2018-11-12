@@ -1,0 +1,35 @@
+parameters:
+  # overrides
+  debug: $(debug)
+
+  # step specifics
+  displayName: ""
+  linter: ""
+  glob: "."
+  extra_arguments: ""
+
+  # expensions
+  validation: []
+
+steps:
+  - script: |
+      if [ -z "${{ parameters.linter }}" ]; then
+        echo "##[error] A linter tool is required"
+        exit 1
+      fi
+    displayName: "${{ parameters.displayName }} - General validation"
+  - ${{ parameters.validation }}
+  - script: |
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Partial: Debug"
+        echo "##[debug] Using ${{ parameters.linter }} as linter tool";
+        echo "##[debug] Using ${{ parameters.glob }} as file selector"
+        echo "##[debug] Using ${{ parameters.extensions }} as filter"
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] Partial: Debug"
+      fi
+
+      echo "##[section] Partial: Step"
+      ${{ parameters.linter }} ${{ parameters.glob }} ${{ parameters.extra_arguments }}
+      echo "##[section] Partial: Step"
+    displayName: ${{ parameters.displayName }}

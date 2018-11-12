@@ -1,0 +1,15 @@
+parameters:
+  # overrides
+  debug: $(debug)
+
+  # step specifics
+  glob: "."
+  extra_arguments: ""
+
+steps:
+  - template: eslint.yml
+    parameters:
+      debug: ${{ parameters.debug }}
+      glob: "${{ parameters.glob }}"
+      extensions: "--ext .js,.jsx"
+      extra_arguments: "${{ parameters.extra_arguments }}"

@@ -1,10 +1,14 @@
 parameters:
-  name: 'linux'
-  vmImage: 'ubuntu 16.04'
+  # pipeline flow control
+  debug: $(pipeline.debug)
+  build_tool: "$(pipeline.build_tool)"
+
+  # job specifics
+  name: "windows"
+  vmImage: "vs2017-win2016"
   matrix:
     node_10_x:
       node_version: 10.x
-  build_tool: 'yarn'
   steps: []
 
 jobs:
@@ -17,11 +21,13 @@ jobs:
         ${{ parameters.matrix }}
 
     variables:
+      debug: ${{ parameters.debug }}
       build_tool: ${{ parameters.build_tool }}
 
     steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: $(node_version)
-      displayName: '[ Installation ] node v$(node_version)'
-    - ${{ parameters.steps }}
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: "Node Installation"
+
+      - ${{ parameters.steps }}

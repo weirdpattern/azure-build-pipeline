@@ -1,8 +1,31 @@
 parameters:
-  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  # overrides
+  debug: $(debug)
+  build_tool: $(build_tool)
+
+  # step specifics
   script_name: ''
   extra_arguments: ''
 
 steps:
-  - script: ${{ parameters.build_tool }} run ${{ script_name }} ${{ extra_arguments }}
+  - script: |
+      # debugger
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Partial: Debug"
+        echo "##[debug] Using ${{ parameters.build_tool }} as build tool";
+        echo "##[debug] Passing ${{ coalesce(parameters.script_name, '-empty-') }} as script name";
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] Partial: Debug"
+      fi
+
+      echo "##[section] Partial: Validation"
+      if [ -z "${{ parameters.script_name }}" ]; then
+        echo "##[error] A script name is required"
+        exit 1
+      fi
+      echo "##[section] Partial: Validation"
+
+      echo "##[section] Partial: Step"
+      ${{ parameters.build_tool }} run ${{ script_name }} ${{ extra_arguments }}
+      echo "##[section] Partial: Step"
     displayName: 'Execute ${{ script_name }} in package.json'

@@ -1,6 +1,27 @@
 parameters:
-  extra_arguments: ''
+  # overrides
+  debug: $(debug)
+  build_tool: "$(build_tool)"
+
+  # step specifics
+  extra_arguments: ""
 
 steps:
-  - script: $(build_tool) install ${{ parameters.extra_arguments }}
-    displayName: '[ Setup ] - Getting dependencies from registry'
+  - script: |
+      if [ -z "${{ parameters.build_tool }}" ]; then
+        echo "##[error] A build tool is required"
+        exit 1
+      fi
+    displayName: "Getting dependencies from registry - Validation"
+  - script: |
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Debugger >>"
+        echo "##[debug] Using ${{ parameters.build_tool }} as build tool";
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] << Debugger"
+      fi
+
+      echo "##[section] Body >>"
+      ${{ parameters.build_tool }} install ${{ parameters.extra_arguments }}
+      echo "##[section] << Body"
+    displayName: "Getting dependencies from registry"
