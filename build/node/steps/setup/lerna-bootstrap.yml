@@ -14,6 +14,7 @@ steps:
         exit 1
       fi
     displayName: "Bootstrapping packages with lerna - Validation"
+
   - script: |
       if [ "${{ parameters.debug }}" == "true" ]; then
         echo "##[section] Debugger >>"

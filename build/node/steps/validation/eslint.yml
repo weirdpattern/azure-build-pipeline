@@ -16,10 +16,6 @@ steps:
       extra_arguments: "${{ parameters.extensions }} ${{ parameters.extra_arguments}}"
       validation:
         - script: |
-            if [ -z "${{ parameters.glob }}" ]; then
-              echo "##[error] A glob is required"
-              exit 1
-            fi
             if [ -z "${{ parameters.extensions }}" ]; then
               echo "##[error] A extension is required"
               exit 1

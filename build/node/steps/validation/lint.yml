@@ -8,7 +8,7 @@ parameters:
   glob: "."
   extra_arguments: ""
 
-  # expensions
+  # extensions
   validation: []
 
 steps:
@@ -17,19 +17,25 @@ steps:
         echo "##[error] A linter tool is required"
         exit 1
       fi
+
+      if [ -z "${{ parameters.glob }}" ]; then
+        echo "##[error] A glob is required"
+        exit 1
+      fi
     displayName: "${{ parameters.displayName }} - General validation"
+
   - ${{ parameters.validation }}
+
   - script: |
       if [ "${{ parameters.debug }}" == "true" ]; then
-        echo "##[section] Partial: Debug"
+        echo "##[section] Debug >>"
         echo "##[debug] Using ${{ parameters.linter }} as linter tool";
         echo "##[debug] Using ${{ parameters.glob }} as file selector"
-        echo "##[debug] Using ${{ parameters.extensions }} as filter"
         echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
-        echo "##[section] Partial: Debug"
+        echo "##[section] << Debug"
       fi
 
-      echo "##[section] Partial: Step"
+      echo "##[section] Body >>"
       ${{ parameters.linter }} ${{ parameters.glob }} ${{ parameters.extra_arguments }}
-      echo "##[section] Partial: Step"
+      echo "##[section] << Body"
     displayName: ${{ parameters.displayName }}

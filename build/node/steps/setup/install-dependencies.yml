@@ -13,6 +13,7 @@ steps:
         exit 1
       fi
     displayName: "Getting dependencies from registry - Validation"
+
   - script: |
       if [ "${{ parameters.debug }}" == "true" ]; then
         echo "##[section] Debugger >>"

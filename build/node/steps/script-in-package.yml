@@ -4,28 +4,27 @@ parameters:
   build_tool: $(build_tool)
 
   # step specifics
-  script_name: ''
-  extra_arguments: ''
+  script_name: ""
+  extra_arguments: ""
 
 steps:
   - script: |
-      # debugger
-      if [ "${{ parameters.debug }}" == "true" ]; then
-        echo "##[section] Partial: Debug"
-        echo "##[debug] Using ${{ parameters.build_tool }} as build tool";
-        echo "##[debug] Passing ${{ coalesce(parameters.script_name, '-empty-') }} as script name";
-        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
-        echo "##[section] Partial: Debug"
-      fi
-
-      echo "##[section] Partial: Validation"
       if [ -z "${{ parameters.script_name }}" ]; then
         echo "##[error] A script name is required"
         exit 1
       fi
-      echo "##[section] Partial: Validation"
+    displayName: Execute ${{ script_name }} in package.json - Validation
 
-      echo "##[section] Partial: Step"
+  - script: |
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Debugger >>"
+        echo "##[debug] Using ${{ parameters.build_tool }} as build tool";
+        echo "##[debug] Passing ${{ coalesce(parameters.script_name, '-empty-') }} as script name";
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] << Debugger"
+      fi
+
+      echo "##[section] Body >>"
       ${{ parameters.build_tool }} run ${{ script_name }} ${{ extra_arguments }}
-      echo "##[section] Partial: Step"
-    displayName: 'Execute ${{ script_name }} in package.json'
+      echo "##[section] << Body"
+    displayName: "Execute ${{ script_name }} in package.json"
