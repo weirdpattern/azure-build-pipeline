@@ -5,7 +5,6 @@ A collection of predefined Azure DevOps Pipeline Resources.
 
 ## Available jobs
 
-- [Node](./docs/node/job.md)
 
 
 ## Contributing
