@@ -1,8 +1,48 @@
+##
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# @author Patricio Trevino
+##
+
 parameters:
-  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
+  # overrides
+  debug: $(debug)
+
+  # step specifics
+  displayName: "Prettier styling"
+  glob: '*.{js,jsx,ts,tsx,vue,htm,html,css,less,scss,sass,json,yml,yaml,md,markdown}'
   extra_arguments: ''
-  glob: '*.{js,jsx,ts,tsx,html,json}'
+
+  # extensions
+  validation: []
 
 steps:
-  - script: prettier --write ${{ parameters.extra_arguments }} ${{ parameters.glob }}
-    displayName: '[[Styling]] - Formatting project with prettier'
+  - script: |
+      if [ -z "${{ parameters.glob }}" ]; then
+        echo "##[error] A glob is required"
+        exit 1
+      fi
+
+      if [ "${{ parameters.extra_arguments }}" =~ "(?:--write)" ]; then
+        echo "##[error] Cannot rewrite files during build"
+        echo "##[error] Please run prettier and commit again"
+        exit 1
+      fi
+
+    displayName: "${{ parameters.displayName }} - General validation"
+
+  - ${{ parameters.validation }}
+
+  - script: |
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Debug >>"
+        echo "##[debug] Using ${{ parameters.glob }} as file selector"
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] << Debug"
+      fi
+
+      echo "##[section] Body >>"
+      prettier --list-different ${{ parameters.extra_arguments }} ${{ parameters.glob }}
+      echo "##[section] << Body"
+    displayName: ${{ parameters.displayName }}

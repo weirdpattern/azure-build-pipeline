@@ -1,11 +1,32 @@
-paramters:
-  build_tool: ${{ coalesce($(BUILD_TOOL), 'yarn') }}
-  needs_install: false
+##
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# @author Patricio Trevino
+##
+
+parameters:
+  # overrides
+  debug: $(debug)
+
+  # step specifics
+  verbose: false
   extra_arguments: ''
 
 steps:
-  - script: ${{ parameters.build_tool }} install jest
-    condition: eq(${{ parameters.needs_install }}, true)
-    displayName: '[[Test]] - Installing jest'
-  - script: jest ${{ parameters.extra_arguments }}
-    displayName: '[[Test]] - Running tests with jest'
+  - script: |
+      if [ "${{ parameters.debug }}" == "true" ]; then
+        echo "##[section] Debug >>"
+        echo "##[debug] Passing ${{ parameters.verbose }} as verbose flag";
+        echo "##[debug] Passing ${{ coalesce(parameters.extra_arguments, '-empty-') }} as extra arguments";
+        echo "##[section] << Debug"
+      fi
+
+      echo "##[section] Body >>"
+      if [ "${{ parameters.verbose }} " == "true"]; then
+        jest --verbose ${{ parameters.extra_arguments }}
+      else
+        jest ${{ parameters.extra_arguments }}
+      fi
+      echo "##[section] << Body"
+    displayName: 'Jest testing'

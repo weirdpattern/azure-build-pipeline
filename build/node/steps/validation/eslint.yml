@@ -1,3 +1,10 @@
+##
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# @author Patricio Trevino
+##
+
 parameters:
   # overrides
   debug: $(debug)
@@ -8,11 +15,12 @@ parameters:
   extra_arguments: ""
 
 steps:
-  - template: lint.yml
+  - template: _lint.yml
     parameters:
       displayName: 'ESLint linting'
       linter: "eslint"
       glob: "${{ parameters.glob }}"
+      overridden: true
       extra_arguments: "${{ parameters.extensions }} ${{ parameters.extra_arguments}}"
       validation:
         - script: |

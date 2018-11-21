@@ -1,3 +1,10 @@
+##
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# @author Patricio Trevino
+##
+
 parameters:
   # overrides
   debug: $(debug)
@@ -6,6 +13,7 @@ parameters:
   displayName: ""
   linter: ""
   glob: "."
+  overridden: false
   extra_arguments: ""
 
   # extensions
@@ -13,6 +21,12 @@ parameters:
 
 steps:
   - script: |
+      if [ "${{ parameters.overridden }}" == false ]; then
+        echo "##[error] _lint.yml is an abstract step."
+        echo "##[error] Use tslint.yml or any of the eslint variants"
+        exit 1
+      fi
+
       if [ -z "${{ parameters.linter }}" ]; then
         echo "##[error] A linter tool is required"
         exit 1

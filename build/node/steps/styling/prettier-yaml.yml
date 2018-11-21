@@ -10,14 +10,11 @@ parameters:
   debug: $(debug)
 
   # step specifics
-  glob: "."
-  extra_arguments: ""
+  extra_arguments: ''
 
 steps:
-  - template: _lint.yml
+  - template: prettier.yml
     parameters:
-      displayName: 'TSLint linting'
-      linter: "tslint"
-      glob: "${{ parameters.glob }}"
-      overridden: true
+      displayName: "TypeScript HTML Prettier linting"
+      glob: "*.{yml,yaml}"
       extra_arguments: "${{ parameters.extra_arguments}}"
